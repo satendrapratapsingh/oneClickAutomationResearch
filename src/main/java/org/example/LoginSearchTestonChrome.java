@@ -1,5 +1,4 @@
 package org.example;
-
 import static org.junit.Assert.*;
 
 import java.nio.file.Paths;
@@ -34,7 +33,7 @@ public class LoginSearchTestonChrome {
 		LaunchOptions lp = new LaunchOptions();
 //		lp.setChannel("chrome"); // chrome
 		lp.setChannel(configFileReader.getBrowser()); // chrome
-		lp.setHeadless(false);
+		lp.setHeadless(true);
 		lp.setSlowMo(50);
 		Browser browser = playwright.chromium().launch(lp);
 		BrowserContext brcx1 = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 720));

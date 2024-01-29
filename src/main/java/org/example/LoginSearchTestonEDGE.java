@@ -1,7 +1,7 @@
 package org.example;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-
+import org.example.ConfigFileReader;
 import java.nio.file.Paths;
 
 import org.testng.annotations.AfterMethod;
@@ -22,18 +22,19 @@ public class LoginSearchTestonEDGE {
 
 	public Playwright playwright;
 	public Page p1;
+	ConfigFileReader configFileReader = new ConfigFileReader();
 
 	@BeforeTest
 	public void setup() {
 		playwright = Playwright.create();
 		LaunchOptions lp = new LaunchOptions();
 		lp.setChannel("msedge"); // msedge
-		lp.setHeadless(false);
+		lp.setHeadless(true);
 		lp.setSlowMo(50);
 		Browser browser = playwright.chromium().launch(lp);
 		BrowserContext brcx1 = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 720));
 		p1 = brcx1.newPage();
-		p1.navigate("https://catalyst.nejm.org");
+//		p1.navigate("https://catalyst.nejm.org");
 //		p1.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("edgeLaunched.png")));
 		System.out.println("EDGE - INSIDE BEFORE TEST SETUP");
 	}
@@ -41,9 +42,10 @@ public class LoginSearchTestonEDGE {
 	@Test(priority = 1)
 	public void login() throws InterruptedException {
 		System.out.println("EDGE - INSIDE LOGIN TEST ");
-		p1.navigate("https://catalyst.nejm.org");
-		p1.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("webkitLaunched.png")));
-		assertThat(p1.getByTitle("/NEJM Catalyst/"));
+		p1.navigate(configFileReader.getApplicationUrl());
+//		p1.navigate("https://catalyst.nejm.org");
+//		p1.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("webkitLaunched.png")));
+		assertThat(p1.getByTitle(configFileReader.getTitle()));
 		Locator getSignin = p1.locator("header").getByRole(AriaRole.LINK,
 				new Locator.GetByRoleOptions().setName("Sign In"));
 		assertThat(getSignin).isVisible();
@@ -53,13 +55,13 @@ public class LoginSearchTestonEDGE {
 		locateSignin.isVisible();
 		Locator fillSignInEmailAddress = p1.locator("form").getByRole(AriaRole.TEXTBOX,
 				new Locator.GetByRoleOptions().setName("Email Address"));
-		fillSignInEmailAddress.fill("spsingh@mms.org");
+		fillSignInEmailAddress.fill(configFileReader.getUserName());
 		Locator fillSignInEmailPassword = p1.locator("form").getByRole(AriaRole.TEXTBOX,
 				new Locator.GetByRoleOptions().setName("Password"));
-		fillSignInEmailPassword.fill("Appzlogic@123");
+		fillSignInEmailPassword.fill(configFileReader.getPassword());
 		Locator clickSignIn = p1.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In"));
 		clickSignIn.click();
-		Locator signedUserLink = p1.locator("a").filter(new Locator.FilterOptions().setHasText("Satendra Pratap Singh"))
+		Locator signedUserLink = p1.locator("a").filter(new Locator.FilterOptions().setHasText(configFileReader.getSignedUserName()))
 				.first();
 		signedUserLink.isVisible();
 		Thread.sleep(2000);
