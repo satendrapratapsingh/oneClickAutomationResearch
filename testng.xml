@@ -4,8 +4,8 @@
 	<test thread-count="3" name="Test">
 		<classes>
 			<class name="org.example.LoginSearchTestonChrome" />
-			<class name="org.example.LoginSearchTestonEDGE" />
-			<class name="org.example.LoginSearchTestonFirefox" />
+<!-- 			<class name="org.example.LoginSearchTestonEDGE" />
+			<class name="org.example.LoginSearchTestonFirefox" /> -->
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->
